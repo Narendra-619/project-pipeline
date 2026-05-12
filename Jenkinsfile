@@ -22,9 +22,13 @@ pipeline {
             }
         }
 
-        stage('Archive Artifacts') {
+        stage('Deploy') {
             steps {
-                archiveArtifacts artifacts: 'build/*'
+                echo 'Deploying website to Apache...'
+
+                sh '''
+                sudo cp -r build/* /var/www/html/
+                '''
             }
         }
 
@@ -33,7 +37,7 @@ pipeline {
     post {
 
         success {
-            echo 'Pipeline executed successfully!'
+            echo 'Deployment successful!'
         }
 
         failure {
@@ -41,7 +45,6 @@ pipeline {
         }
 
         always {
-            echo 'Cleaning workspace...'
             cleanWs()
         }
     }
