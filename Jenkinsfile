@@ -3,16 +3,9 @@ pipeline {
 
     stages {
 
-        stage('Clone Repository') {
-            steps {
-                echo 'Cloning repository...'
-                git 'https://github.com/Narendra-619/project-pipeline.git'
-            }
-        }
-
         stage('Verify Files') {
             steps {
-                echo 'Checking project files...'
+                echo 'Checking files...'
                 sh 'ls -la'
             }
         }
