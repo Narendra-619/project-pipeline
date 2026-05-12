@@ -5,14 +5,14 @@ pipeline {
 
         stage('Verify Files') {
             steps {
-                echo 'Checking files...'
+                echo 'Checking project files...'
                 sh 'ls -la'
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Creating build folder...'
+                echo 'Preparing build files...'
 
                 sh '''
                 mkdir -p build
@@ -22,9 +22,9 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Nginx') {
             steps {
-                echo 'Deploying website to Apache...'
+                echo 'Deploying website to Nginx...'
 
                 sh '''
                 sudo cp -r build/* /var/www/html/
@@ -37,7 +37,7 @@ pipeline {
     post {
 
         success {
-            echo 'Deployment successful!'
+            echo 'Website deployed successfully!'
         }
 
         failure {
