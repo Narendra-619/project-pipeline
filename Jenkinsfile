@@ -5,55 +5,35 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                echo 'Checking out source code...'
                 checkout scm
             }
         }
 
-        stage('Verify Files') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Checking project files...'
-                sh 'ls -la'
+                sh 'docker build -t mywebsite .'
             }
         }
 
-        stage('Build') {
+        stage('Stop Old Container') {
             steps {
-                echo 'Preparing build files...'
-
                 sh '''
-                rm -rf build
-                mkdir -p build
-                cp index.html build/
-                cp style.css build/
+                docker stop mycontainer || true
+                docker rm mycontainer || true
                 '''
             }
         }
 
-        stage('Deploy to Nginx') {
+        stage('Run Container') {
             steps {
-                echo 'Deploying website to Nginx...'
-
-                sh '''
-                sudo cp -r build/* /var/www/html/
-                '''
+                sh 'docker run -d -p 8080:80 --name mycontainer mywebsite'
             }
         }
 
     }
 
     post {
-
-        success {
-            echo 'Website deployed successfully!'
-        }
-
-        failure {
-            echo 'Pipeline failed!'
-        }
-
         always {
-            echo 'Cleaning workspace...'
             cleanWs()
         }
     }
