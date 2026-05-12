@@ -3,6 +3,13 @@ pipeline {
 
     stages {
 
+        stage('Checkout') {
+            steps {
+                echo 'Checking out source code...'
+                checkout scm
+            }
+        }
+
         stage('Verify Files') {
             steps {
                 echo 'Checking project files...'
@@ -15,6 +22,7 @@ pipeline {
                 echo 'Preparing build files...'
 
                 sh '''
+                rm -rf build
                 mkdir -p build
                 cp index.html build/
                 cp style.css build/
@@ -45,6 +53,7 @@ pipeline {
         }
 
         always {
+            echo 'Cleaning workspace...'
             cleanWs()
         }
     }
